@@ -1,0 +1,814 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Services | Web App Digital Solutions</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * { scroll-behavior: smooth; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #FFD700;
+            overflow-x: hidden;
+        }
+        :root {
+            --yellow: #FFD700;
+            --yellow-light: #FFE44D;
+            --black: #0a0a0a;
+            --black-light: #1a1a1a;
+        }
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: var(--yellow); }
+        ::-webkit-scrollbar-thumb { background: var(--black); border-radius: 4px; }
+
+        .navbar {
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .navbar.scrolled {
+            background: rgba(255, 215, 0, 0.95);
+            backdrop-filter: blur(20px);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .cta-glow {
+            position: relative;
+            background: linear-gradient(135deg, var(--black) 0%, var(--black-light) 100%);
+            color: var(--yellow);
+            font-weight: 700;
+            padding: 18px 45px;
+            border-radius: 50px;
+            overflow: hidden;
+            transition: all 0.4s ease;
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.4);
+        }
+        .cta-glow:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 0 50px rgba(0, 0, 0, 0.6);
+        }
+        .cta-glow::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,215,0,0.3), transparent);
+            transition: 0.5s;
+        }
+        .cta-glow:hover::before { left: 100%; }
+
+        .nav-link { position: relative; }
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 3px;
+            background: var(--black);
+            transition: width 0.3s ease;
+        }
+        .nav-link:hover::after,
+        .nav-link.active::after { width: 100%; }
+
+        .mobile-menu {
+            transform: translateX(100%);
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .mobile-menu.open { transform: translateX(0); }
+
+        .gradient-text {
+            background: linear-gradient(135deg, var(--black) 0%, #333 50%, var(--black) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .yellow-pattern {
+            background-color: var(--yellow);
+            background-image: radial-gradient(circle at 20% 80%, rgba(0,0,0,0.05) 0%, transparent 50%),
+                              radial-gradient(circle at 80% 20%, rgba(0,0,0,0.05) 0%, transparent 50%);
+        }
+
+        .page-header {
+            background: linear-gradient(135deg, rgba(255,215,0,0.95) 0%, rgba(255,215,0,0.85) 100%), 
+                        url('https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=1920') center/cover;
+            min-height: 50vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding-top: 150px;
+            padding-bottom: 40px;
+            margin-top: 0;
+        }
+
+        .service-detail {
+            background: linear-gradient(145deg, #FFE44D 0%, #FFD700 100%);
+            border: 2px solid var(--black);
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .service-detail:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        .tech-badge {
+            background: var(--black);
+            color: var(--yellow);
+            padding: 8px 16px;
+            border-radius: 50px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        .tech-badge:hover {
+            transform: scale(1.1);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .process-step {
+            position: relative;
+            background: linear-gradient(145deg, #FFE44D 0%, #FFD700 100%);
+            border: 2px solid var(--black);
+            transition: all 0.4s ease;
+        }
+        .process-step:hover {
+            background: var(--black);
+            transform: scale(1.05);
+        }
+        .process-step:hover * { color: var(--yellow) !important; }
+        .process-step:hover .step-number {
+            background: var(--yellow) !important;
+            color: var(--black) !important;
+        }
+
+        .pricing-card {
+            background: linear-gradient(145deg, #FFE44D 0%, #FFD700 100%);
+            border: 2px solid var(--black);
+            transition: all 0.5s ease;
+        }
+        .pricing-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.3);
+        }
+        .pricing-card.featured {
+            background: var(--black);
+            transform: scale(1.05);
+        }
+        .pricing-card.featured * { color: var(--yellow); }
+        .pricing-card.featured .price-btn {
+            background: var(--yellow);
+            color: var(--black);
+        }
+
+        .faq-item {
+            background: linear-gradient(145deg, #FFE44D 0%, #FFD700 100%);
+            border: 2px solid var(--black);
+            transition: all 0.3s ease;
+        }
+        .faq-item:hover {
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+        .faq-answer {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+        .faq-item.active .faq-answer {
+            max-height: 300px;
+        }
+        .faq-item.active .faq-icon {
+            transform: rotate(180deg);
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+        .float-animation { animation: float 6s ease-in-out infinite; }
+
+        /* Cursor Follower */
+        .cursor-follower {
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--black);
+            border-radius: 50%;
+            position: fixed;
+            pointer-events: none;
+            z-index: 9998;
+            transition: transform 0.15s ease, width 0.3s ease, height 0.3s ease, border-color 0.3s ease, background 0.3s ease;
+            transform: translate(-50%, -50%);
+        }
+        .cursor-follower.hover {
+            width: 50px;
+            height: 50px;
+            background: rgba(0, 0, 0, 0.1);
+        }
+        .cursor-follower.on-dark {
+            border-color: var(--yellow);
+        }
+        .cursor-follower.on-dark.hover {
+            background: rgba(255, 215, 0, 0.2);
+        }
+
+        /* WhatsApp Button Styles */
+        .whatsapp-btn {
+            animation: pulse-whatsapp 2s ease-in-out infinite;
+        }
+        @keyframes pulse-whatsapp {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.5); }
+            50% { box-shadow: 0 0 0 15px rgba(37, 211, 102, 0); }
+        }
+        .animate-bounce-in {
+            animation: bounce-in 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+        @keyframes bounce-in {
+            0% { opacity: 0; transform: scale(0.5) translateY(20px); }
+            100% { opacity: 1; transform: scale(1) translateY(0); }
+        }
+        #whatsappWidget {
+            transition: all 0.3s ease;
+        }
+    </style>
+</head>
+<body class="text-black">
+    <!-- Custom Cursor -->
+    <div class="cursor-follower hidden md:block" id="cursor"></div>
+
+    <!-- Navbar -->
+    <nav class="navbar fixed w-full top-0 z-50 py-4 px-6 md:px-12 bg-yellow-400/90 backdrop-blur-sm">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <a href="index.html" class="flex items-center space-x-3 group">
+                <div class="w-18 h-18  flex items-center justify-center transform group-hover:rotate-12 transition-transform duration-300">
+                    <img class="brand-logo" src="./images/logo.png" alt="Brand" />
+                </div>
+                <div>
+                    <h1 class="font-bold text-lg leading-tight text-black">Web App</h1>
+                    <p class="text-black/70 text-xs font-medium">Digital Solutions</p>
+                </div>
+            </a>
+
+            <div class="hidden lg:flex items-center space-x-10">
+                <a href="index.html" class="nav-link text-black hover:text-black/70 transition-colors font-semibold">Home</a>
+                <a href="about.html" class="nav-link text-black hover:text-black/70 transition-colors font-semibold">About Us</a>
+                <a href="services.html" class="nav-link active text-black hover:text-black/70 transition-colors font-semibold">Services</a>
+                <a href="reviews.html" class="nav-link text-black hover:text-black/70 transition-colors font-semibold">Reviews</a>
+                <a href="careers.html" class="nav-link text-black hover:text-black/70 transition-colors font-semibold">Careers</a>
+                <a href="contact.html" class="nav-link text-black hover:text-black/70 transition-colors font-semibold">Contact</a>
+            </div>
+
+            <a href="contact.html" class="hidden lg:block cta-glow text-sm">
+                Let's Talk <i class="fas fa-arrow-right ml-2"></i>
+            </a>
+
+            <button class="lg:hidden text-black text-2xl" id="menuBtn">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Mobile Menu -->
+    <div class="mobile-menu fixed top-0 right-0 w-80 h-full bg-yellow-400 z-50 p-8 border-l-4 border-black" id="mobileMenu">
+        <button class="absolute top-6 right-6 text-2xl text-black" id="closeMenu">
+            <i class="fas fa-times"></i>
+        </button>
+        <div class="mt-16 space-y-6">
+            <a href="index.html" class="block text-xl text-black hover:text-black/70 transition-colors font-semibold">Home</a>
+            <a href="about.html" class="block text-xl text-black hover:text-black/70 transition-colors font-semibold">About Us</a>
+            <a href="services.html" class="block text-xl text-black hover:text-black/70 transition-colors font-semibold">Services</a>
+            <a href="reviews.html" class="block text-xl text-black hover:text-black/70 transition-colors font-semibold">Reviews</a>
+            <a href="careers.html" class="block text-xl text-black hover:text-black/70 transition-colors font-semibold">Careers</a>
+            <a href="contact.html" class="block text-xl text-black hover:text-black/70 transition-colors font-semibold">Contact</a>
+            <a href="contact.html" class="inline-block cta-glow mt-6">Let's Talk</a>
+        </div>
+    </div>
+
+    <!-- Page Header -->
+    <section class="page-header pt-20">
+        <div class="text-center">
+            <span class="inline-block px-4 py-2 bg-black text-yellow-400 rounded-full text-sm font-semibold mb-6">What We Do</span>
+            <h1 class="text-5xl md:text-7xl font-black text-black mb-6">Our Services</h1>
+            <p class="text-xl text-black/70 max-w-2xl mx-auto px-6">Comprehensive digital solutions to transform your business and drive success</p>
+        </div>
+    </section>
+
+    <!-- Services Overview -->
+    <section class="py-24 yellow-pattern">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="text-center mb-16">
+                <span class="text-black font-bold uppercase tracking-wider bg-black/10 px-4 py-2 rounded-full">Our Expertise</span>
+                <h2 class="text-4xl md:text-5xl font-black mt-6 text-black">Full-Stack Digital Solutions</h2>
+            </div>
+
+            <!-- Web Development -->
+            <div id="web" class="service-detail p-8 md:p-12 rounded-2xl mb-12">
+                <div class="grid lg:grid-cols-2 gap-12 items-center">
+                    <div>
+                        <div class="w-20 h-20 bg-black rounded-2xl flex items-center justify-center mb-6">
+                            <i class="fas fa-globe text-yellow-400 text-3xl"></i>
+                        </div>
+                        <h3 class="text-3xl md:text-4xl font-bold text-black mb-4">Web Development</h3>
+                        <p class="text-black/70 text-lg mb-6">
+                            We create stunning, high-performance websites that captivate visitors and convert them into customers. From simple landing pages to complex web applications, our team delivers exceptional results.
+                        </p>
+                        <ul class="space-y-3 mb-8">
+                            <li class="flex items-center text-black/80"><i class="fas fa-check-circle text-black mr-3"></i> Custom Website Design & Development</li>
+                            <li class="flex items-center text-black/80"><i class="fas fa-check-circle text-black mr-3"></i> E-commerce Solutions (Shopify, WooCommerce, Custom)</li>
+                            <li class="flex items-center text-black/80"><i class="fas fa-check-circle text-black mr-3"></i> Content Management Systems (WordPress, Drupal)</li>
+                            <li class="flex items-center text-black/80"><i class="fas fa-check-circle text-black mr-3"></i> Progressive Web Applications (PWA)</li>
+                            <li class="flex items-center text-black/80"><i class="fas fa-check-circle text-black mr-3"></i> Website Maintenance & Support</li>
+                        </ul>
+                        <div class="flex flex-wrap gap-2 mb-8">
+                            <span class="tech-badge">React</span>
+                            <span class="tech-badge">Vue.js</span>
+                            <span class="tech-badge">Angular</span>
+                            <span class="tech-badge">Next.js</span>
+                            <span class="tech-badge">Node.js</span>
+                            <span class="tech-badge">PHP</span>
+                        </div>
+                        <a href="contact.html" class="cta-glow inline-block">Get Started <i class="fas fa-arrow-right ml-2"></i></a>
+                    </div>
+                    <div class="relative">
+                        <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=600" alt="Web Development" class="rounded-2xl shadow-2xl">
+                        <div class="absolute -bottom-6 -right-6 bg-black text-yellow-400 p-4 rounded-xl float-animation">
+                            <i class="fas fa-code text-2xl"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Mobile App Development -->
+            <div id="mobile" class="service-detail p-8 md:p-12 rounded-2xl mb-12">
+                <div class="grid lg:grid-cols-2 gap-12 items-center">
+                    <div class="order-2 lg:order-1 relative">
+                        <img src="https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=600" alt="Mobile Development" class="rounded-2xl shadow-2xl">
+                        <div class="absolute -bottom-6 -left-6 bg-black text-yellow-400 p-4 rounded-xl float-animation">
+                            <i class="fas fa-mobile-alt text-2xl"></i>
+                        </div>
+                    </div>
+                    <div class="order-1 lg:order-2">
+                        <div class="w-20 h-20 bg-black rounded-2xl flex items-center justify-center mb-6">
+                            <i class="fas fa-mobile-alt text-yellow-400 text-3xl"></i>
+                        </div>
+                        <h3 class="text-3xl md:text-4xl font-bold text-black mb-4">Mobile App Development</h3>
+                        <p class="text-black/70 text-lg mb-6">
+                            Build powerful mobile experiences that users love. We develop native and cross-platform apps that perform flawlessly on iOS and Android devices.
+                        </p>
+                        <ul class="space-y-3 mb-8">
+                            <li class="flex items-center text-black/80"><i class="fas fa-check-circle text-black mr-3"></i> Native iOS Development (Swift)</li>
+                            <li class="flex items-center text-black/80"><i class="fas fa-check-circle text-black mr-3"></i> Native Android Development (Kotlin)</li>
+                            <li class="flex items-center text-black/80"><i class="fas fa-check-circle text-black mr-3"></i> Cross-Platform Apps (React Native, Flutter)</li>
+                            <li class="flex items-center text-black/80"><i class="fas fa-check-circle text-black mr-3"></i> App Store Optimization (ASO)</li>
+                            <li class="flex items-center text-black/80"><i class="fas fa-check-circle text-black mr-3"></i> App Maintenance & Updates</li>
+                        </ul>
+                        <div class="flex flex-wrap gap-2 mb-8">
+                            <span class="tech-badge">React Native</span>
+                            <span class="tech-badge">Flutter</span>
+                            <span class="tech-badge">Swift</span>
+                            <span class="tech-badge">Kotlin</span>
+                            <span class="tech-badge">Firebase</span>
+                        </div>
+                        <a href="contact.html" class="cta-glow inline-block">Get Started <i class="fas fa-arrow-right ml-2"></i></a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Software Development -->
+            <div id="software" class="service-detail p-8 md:p-12 rounded-2xl mb-12">
+                <div class="grid lg:grid-cols-2 gap-12 items-center">
+                    <div>
+                        <div class="w-20 h-20 bg-black rounded-2xl flex items-center justify-center mb-6">
+                            <i class="fas fa-cogs text-yellow-400 text-3xl"></i>
+                        </div>
+                        <h3 class="text-3xl md:text-4xl font-bold text-black mb-4">Software Development</h3>
+                        <p class="text-black/70 text-lg mb-6">
+                            Custom software solutions designed to streamline your operations, boost productivity, and give you a competitive edge in your industry.
+                        </p>
+                        <ul class="space-y-3 mb-8">
+                            <li class="flex items-center text-black/80"><i class="fas fa-check-circle text-black mr-3"></i> Enterprise Software Solutions</li>
+                            <li class="flex items-center text-black/80"><i class="fas fa-check-circle text-black mr-3"></i> SaaS Application Development</li>
+                            <li class="flex items-center text-black/80"><i class="fas fa-check-circle text-black mr-3"></i> API Development & Integration</li>
+                            <li class="flex items-center text-black/80"><i class="fas fa-check-circle text-black mr-3"></i> Database Design & Management</li>
+                            <li class="flex items-center text-black/80"><i class="fas fa-check-circle text-black mr-3"></i> Legacy System Modernization</li>
+                        </ul>
+                        <div class="flex flex-wrap gap-2 mb-8">
+                            <span class="tech-badge">Python</span>
+                            <span class="tech-badge">Java</span>
+                            <span class="tech-badge">.NET</span>
+                            <span class="tech-badge">PostgreSQL</span>
+                            <span class="tech-badge">MongoDB</span>
+                        </div>
+                        <a href="contact.html" class="cta-glow inline-block">Get Started <i class="fas fa-arrow-right ml-2"></i></a>
+                    </div>
+                    <div class="relative">
+                        <img src="https://images.unsplash.com/photo-1551434678-e076c223a692?w=600" alt="Software Development" class="rounded-2xl shadow-2xl">
+                        <div class="absolute -bottom-6 -right-6 bg-black text-yellow-400 p-4 rounded-xl float-animation">
+                            <i class="fas fa-cogs text-2xl"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- UI/UX Design -->
+            <div id="design" class="service-detail p-8 md:p-12 rounded-2xl mb-12">
+                <div class="grid lg:grid-cols-2 gap-12 items-center">
+                    <div class="order-2 lg:order-1 relative">
+                        <img src="https://images.unsplash.com/photo-1561070791-2526d30994b5?w=600" alt="UI/UX Design" class="rounded-2xl shadow-2xl">
+                        <div class="absolute -bottom-6 -left-6 bg-black text-yellow-400 p-4 rounded-xl float-animation">
+                            <i class="fas fa-paint-brush text-2xl"></i>
+                        </div>
+                    </div>
+                    <div class="order-1 lg:order-2">
+                        <div class="w-20 h-20 bg-black rounded-2xl flex items-center justify-center mb-6">
+                            <i class="fas fa-paint-brush text-yellow-400 text-3xl"></i>
+                        </div>
+                        <h3 class="text-3xl md:text-4xl font-bold text-black mb-4">UI/UX Design</h3>
+                        <p class="text-black/70 text-lg mb-6">
+                            Create intuitive, engaging user experiences that delight your customers and drive conversions. Our design team blends creativity with strategy.
+                        </p>
+                        <ul class="space-y-3 mb-8">
+                            <li class="flex items-center text-black/80"><i class="fas fa-check-circle text-black mr-3"></i> User Research & Analysis</li>
+                            <li class="flex items-center text-black/80"><i class="fas fa-check-circle text-black mr-3"></i> Wireframing & Prototyping</li>
+                            <li class="flex items-center text-black/80"><i class="fas fa-check-circle text-black mr-3"></i> Visual Design & Branding</li>
+                            <li class="flex items-center text-black/80"><i class="fas fa-check-circle text-black mr-3"></i> Usability Testing</li>
+                            <li class="flex items-center text-black/80"><i class="fas fa-check-circle text-black mr-3"></i> Design System Creation</li>
+                        </ul>
+                        <div class="flex flex-wrap gap-2 mb-8">
+                            <span class="tech-badge">Figma</span>
+                            <span class="tech-badge">Adobe XD</span>
+                            <span class="tech-badge">Sketch</span>
+                            <span class="tech-badge">InVision</span>
+                            <span class="tech-badge">Principle</span>
+                        </div>
+                        <a href="contact.html" class="cta-glow inline-block">Get Started <i class="fas fa-arrow-right ml-2"></i></a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Cloud Solutions -->
+            <div id="cloud" class="service-detail p-8 md:p-12 rounded-2xl mb-12">
+                <div class="grid lg:grid-cols-2 gap-12 items-center">
+                    <div>
+                        <div class="w-20 h-20 bg-black rounded-2xl flex items-center justify-center mb-6">
+                            <i class="fas fa-cloud text-yellow-400 text-3xl"></i>
+                        </div>
+                        <h3 class="text-3xl md:text-4xl font-bold text-black mb-4">Cloud Solutions</h3>
+                        <p class="text-black/70 text-lg mb-6">
+                            Scale your business with robust cloud infrastructure. We help you migrate, manage, and optimize your cloud environment for maximum performance.
+                        </p>
+                        <ul class="space-y-3 mb-8">
+                            <li class="flex items-center text-black/80"><i class="fas fa-check-circle text-black mr-3"></i> Cloud Migration Strategy</li>
+                            <li class="flex items-center text-black/80"><i class="fas fa-check-circle text-black mr-3"></i> DevOps & CI/CD Implementation</li>
+                            <li class="flex items-center text-black/80"><i class="fas fa-check-circle text-black mr-3"></i> Cloud Architecture Design</li>
+                            <li class="flex items-center text-black/80"><i class="fas fa-check-circle text-black mr-3"></i> Serverless Solutions</li>
+                            <li class="flex items-center text-black/80"><i class="fas fa-check-circle text-black mr-3"></i> Cloud Security & Compliance</li>
+                        </ul>
+                        <div class="flex flex-wrap gap-2 mb-8">
+                            <span class="tech-badge">AWS</span>
+                            <span class="tech-badge">Azure</span>
+                            <span class="tech-badge">Google Cloud</span>
+                            <span class="tech-badge">Docker</span>
+                            <span class="tech-badge">Kubernetes</span>
+                        </div>
+                        <a href="contact.html" class="cta-glow inline-block">Get Started <i class="fas fa-arrow-right ml-2"></i></a>
+                    </div>
+                    <div class="relative">
+                        <img src="https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=600" alt="Cloud Solutions" class="rounded-2xl shadow-2xl">
+                        <div class="absolute -bottom-6 -right-6 bg-black text-yellow-400 p-4 rounded-xl float-animation">
+                            <i class="fas fa-cloud text-2xl"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Digital Marketing -->
+            <div id="marketing" class="service-detail p-8 md:p-12 rounded-2xl">
+                <div class="grid lg:grid-cols-2 gap-12 items-center">
+                    <div class="order-2 lg:order-1 relative">
+                        <img src="https://images.unsplash.com/photo-1533750349088-cd871a92f312?w=600" alt="Digital Marketing" class="rounded-2xl shadow-2xl">
+                        <div class="absolute -bottom-6 -left-6 bg-black text-yellow-400 p-4 rounded-xl float-animation">
+                            <i class="fas fa-chart-line text-2xl"></i>
+                        </div>
+                    </div>
+                    <div class="order-1 lg:order-2">
+                        <div class="w-20 h-20 bg-black rounded-2xl flex items-center justify-center mb-6">
+                            <i class="fas fa-chart-line text-yellow-400 text-3xl"></i>
+                        </div>
+                        <h3 class="text-3xl md:text-4xl font-bold text-black mb-4">Digital Marketing</h3>
+                        <p class="text-black/70 text-lg mb-6">
+                            Boost your online presence and drive measurable results with data-driven digital marketing strategies tailored to your business goals.
+                        </p>
+                        <ul class="space-y-3 mb-8">
+                            <li class="flex items-center text-black/80"><i class="fas fa-check-circle text-black mr-3"></i> Search Engine Optimization (SEO)</li>
+                            <li class="flex items-center text-black/80"><i class="fas fa-check-circle text-black mr-3"></i> Pay-Per-Click Advertising (PPC)</li>
+                            <li class="flex items-center text-black/80"><i class="fas fa-check-circle text-black mr-3"></i> Social Media Marketing</li>
+                            <li class="flex items-center text-black/80"><i class="fas fa-check-circle text-black mr-3"></i> Content Marketing Strategy</li>
+                            <li class="flex items-center text-black/80"><i class="fas fa-check-circle text-black mr-3"></i> Analytics & Performance Tracking</li>
+                        </ul>
+                        <div class="flex flex-wrap gap-2 mb-8">
+                            <span class="tech-badge">Google Ads</span>
+                            <span class="tech-badge">Meta Ads</span>
+                            <span class="tech-badge">SEMrush</span>
+                            <span class="tech-badge">Ahrefs</span>
+                            <span class="tech-badge">HubSpot</span>
+                        </div>
+                        <a href="contact.html" class="cta-glow inline-block">Get Started <i class="fas fa-arrow-right ml-2"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Our Process -->
+    <section class="py-24 bg-black">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="text-center mb-16">
+                <span class="text-yellow-400 font-bold uppercase tracking-wider bg-yellow-400/10 px-4 py-2 rounded-full">How We Work</span>
+                <h2 class="text-4xl md:text-5xl font-black mt-6 text-yellow-400">Our Process</h2>
+            </div>
+            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+                <div class="process-step p-8 rounded-2xl text-center">
+                    <div class="step-number w-16 h-16 bg-black rounded-full flex items-center justify-center mx-auto mb-6 text-yellow-400 text-2xl font-black">1</div>
+                    <h3 class="text-xl font-bold text-black mb-3">Discovery</h3>
+                    <p class="text-black/70">We dive deep into understanding your business, goals, and target audience.</p>
+                </div>
+                <div class="process-step p-8 rounded-2xl text-center">
+                    <div class="step-number w-16 h-16 bg-black rounded-full flex items-center justify-center mx-auto mb-6 text-yellow-400 text-2xl font-black">2</div>
+                    <h3 class="text-xl font-bold text-black mb-3">Strategy</h3>
+                    <p class="text-black/70">We create a comprehensive plan tailored to your specific requirements.</p>
+                </div>
+                <div class="process-step p-8 rounded-2xl text-center">
+                    <div class="step-number w-16 h-16 bg-black rounded-full flex items-center justify-center mx-auto mb-6 text-yellow-400 text-2xl font-black">3</div>
+                    <h3 class="text-xl font-bold text-black mb-3">Development</h3>
+                    <p class="text-black/70">Our team brings your vision to life using cutting-edge technologies.</p>
+                </div>
+                <div class="process-step p-8 rounded-2xl text-center">
+                    <div class="step-number w-16 h-16 bg-black rounded-full flex items-center justify-center mx-auto mb-6 text-yellow-400 text-2xl font-black">4</div>
+                    <h3 class="text-xl font-bold text-black mb-3">Launch & Support</h3>
+                    <p class="text-black/70">We deploy your solution and provide ongoing support for success.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="py-24 yellow-pattern">
+        <div class="max-w-4xl mx-auto px-6">
+            <div class="text-center mb-16">
+                <span class="text-black font-bold uppercase tracking-wider bg-black/10 px-4 py-2 rounded-full">Got Questions?</span>
+                <h2 class="text-4xl md:text-5xl font-black mt-6 text-black">Frequently Asked Questions</h2>
+            </div>
+            <div class="space-y-4">
+                <div class="faq-item p-6 rounded-2xl cursor-pointer" onclick="toggleFaq(this)">
+                    <div class="flex justify-between items-center">
+                        <h3 class="text-lg font-bold text-black">How long does a typical project take?</h3>
+                        <i class="faq-icon fas fa-chevron-down text-black transition-transform duration-300"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p class="text-black/70 mt-4">Project timelines vary based on complexity. A simple website might take 4-6 weeks, while a complex application could take 3-6 months. We'll provide a detailed timeline during our discovery phase.</p>
+                    </div>
+                </div>
+                <div class="faq-item p-6 rounded-2xl cursor-pointer" onclick="toggleFaq(this)">
+                    <div class="flex justify-between items-center">
+                        <h3 class="text-lg font-bold text-black">What is your pricing model?</h3>
+                        <i class="faq-icon fas fa-chevron-down text-black transition-transform duration-300"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p class="text-black/70 mt-4">We offer both fixed-price and time-and-materials pricing models. For most projects, we recommend fixed-price for better budget predictability. We'll discuss the best option for your needs.</p>
+                    </div>
+                </div>
+                <div class="faq-item p-6 rounded-2xl cursor-pointer" onclick="toggleFaq(this)">
+                    <div class="flex justify-between items-center">
+                        <h3 class="text-lg font-bold text-black">Do you provide ongoing support?</h3>
+                        <i class="faq-icon fas fa-chevron-down text-black transition-transform duration-300"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p class="text-black/70 mt-4">Absolutely! We offer various maintenance and support packages to ensure your solution continues to perform optimally. Our team is available 24/7 for critical issues.</p>
+                    </div>
+                </div>
+                <div class="faq-item p-6 rounded-2xl cursor-pointer" onclick="toggleFaq(this)">
+                    <div class="flex justify-between items-center">
+                        <h3 class="text-lg font-bold text-black">Can you work with our existing team?</h3>
+                        <i class="faq-icon fas fa-chevron-down text-black transition-transform duration-300"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p class="text-black/70 mt-4">Yes! We frequently collaborate with in-house teams. Whether you need full project delivery or team augmentation, we adapt our approach to fit your needs.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="py-24 bg-black relative overflow-hidden">
+        <div class="absolute inset-0 opacity-10">
+            <div class="absolute top-10 left-10 w-64 h-64 bg-yellow-400 rounded-full"></div>
+            <div class="absolute bottom-10 right-10 w-96 h-96 bg-yellow-400 rounded-full"></div>
+        </div>
+        <div class="max-w-4xl mx-auto px-6 text-center relative z-10">
+            <h2 class="text-4xl md:text-6xl font-black text-yellow-400 mb-6">Ready to Start Your Project?</h2>
+            <p class="text-yellow-400/70 text-xl mb-10 max-w-2xl mx-auto">Let's discuss how we can help bring your vision to life with our expert services.</p>
+            <a href="contact.html" class="inline-block px-12 py-5 bg-yellow-400 text-black text-lg font-bold rounded-full hover:bg-yellow-300 transform hover:scale-105 transition-all duration-300 shadow-2xl">
+                Let's Talk Now <i class="fas fa-arrow-right ml-2"></i>
+            </a>
+        </div>
+    </section>
+
+    <!-- WhatsApp Floating Button -->
+    <div id="whatsappWidget" class="fixed bottom-6 right-6 z-50 hidden">
+        <div class="relative group">
+            <button id="closeWhatsapp" class="absolute -top-2 -left-2 w-6 h-6 bg-black text-yellow-400 rounded-full flex items-center justify-center text-xs font-bold shadow-lg hover:bg-gray-800 transition-all duration-300 z-10 opacity-0 group-hover:opacity-100">
+                <i class="fas fa-times"></i>
+            </button>
+            <a href="https://wa.me/+918169312050?text=Hi! I'm interested in your services." target="_blank" class="whatsapp-btn flex items-center justify-center w-16 h-16 bg-green-500 rounded-full shadow-2xl hover:bg-green-600 transition-all duration-300 hover:scale-110">
+                <i class="fab fa-whatsapp text-white text-3xl"></i>
+            </a>
+            <div class="absolute right-20 top-1/2 -translate-y-1/2 bg-black text-yellow-400 px-4 py-2 rounded-lg text-sm font-semibold whitespace-nowrap opacity-0 group-hover:opacity-100 transition-all duration-300 pointer-events-none shadow-lg">
+                Chat with us on WhatsApp
+                <div class="absolute right-0 top-1/2 -translate-y-1/2 translate-x-full border-8 border-transparent border-l-black"></div>
+            </div>
+        </div>
+        <div class="absolute inset-0 w-16 h-16 bg-green-500 rounded-full animate-ping opacity-30 pointer-events-none"></div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="py-12 bg-black border-t-4 border-yellow-400">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="grid md:grid-cols-4 gap-10 mb-10">
+                <div>
+                    <div class="flex items-center space-x-3 mb-6">
+                        <div class="w-30 h-30 bg-yellow-400 rounded-lg flex items-center justify-center">
+                            <img class="brand-logo" src="./images/logo_yellow.svg" alt="Brand" />
+                        </div>
+                        <div>
+                            <h1 class="font-bold text-lg leading-tight text-yellow-400">Web App</h1>
+                            <p class="text-yellow-400/70 text-xs font-medium">Digital Solutions</p>
+                        </div>
+                    </div>
+                    <p class="text-yellow-400/70">Transforming ideas into powerful digital solutions since 2022.</p>
+                </div>
+                <div>
+                    <h4 class="font-bold text-lg mb-6 text-yellow-400">Quick Links</h4>
+                    <ul class="space-y-3 text-yellow-400/70">
+                        <li><a href="index.html" class="hover:text-yellow-400 transition-colors">Home</a></li>
+                        <li><a href="about.html" class="hover:text-yellow-400 transition-colors">About Us</a></li>
+                        <li><a href="services.html" class="hover:text-yellow-400 transition-colors">Services</a></li>
+                        <li><a href="reviews.html" class="hover:text-yellow-400 transition-colors">Reviews</a></li>
+                        <li><a href="careers.html" class="hover:text-yellow-400 transition-colors">Careers</a></li>
+                        <li><a href="contact.html" class="hover:text-yellow-400 transition-colors">Contact</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-bold text-lg mb-6 text-yellow-400">Services</h4>
+                    <ul class="space-y-3 text-yellow-400/70">
+                        <li><a href="services.html#web" class="hover:text-yellow-400 transition-colors">Web Development</a></li>
+                        <li><a href="services.html#mobile" class="hover:text-yellow-400 transition-colors">Mobile Apps</a></li>
+                        <li><a href="services.html#software" class="hover:text-yellow-400 transition-colors">Software Solutions</a></li>
+                        <li><a href="services.html#design" class="hover:text-yellow-400 transition-colors">UI/UX Design</a></li>
+                        <li><a href="services.html#cloud" class="hover:text-yellow-400 transition-colors">Cloud Services</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-bold text-lg mb-6 text-yellow-400">Contact Info</h4>
+                    <div class="space-y-3 text-yellow-400/70">
+                        <div class="flex items-center hover:text-yellow-400 transition-colors">
+                            <i class="fas fa-map-marker-alt mr-2 flex-shrink-0"></i>
+                            <span>Thakur Complex, Kandivali (East), Mumbai, Maharashtra 400101, India</span>
+                        </div>
+                        <div class="flex items-center">
+                            <a href="mailto:hello@webappdigitalsolutions.com" class="flex items-center hover:text-yellow-400 transition-colors">
+                                <i class="fas fa-envelope mr-2 flex-shrink-0"></i>
+                                <span>hello@webappdigitalsolutions.com</span>
+                            </a>
+                        </div>
+                        <div class="flex items-center">
+                            <a href="tel:+918169312050" class="flex items-center hover:text-yellow-400 transition-colors">
+                                <i class="fas fa-phone mr-2 flex-shrink-0"></i>
+                                <span>+91 81693 12050</span>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="flex space-x-4 mt-6">
+                        <a href="https://www.facebook.com/profile.php?id=61586080677064" class="w-10 h-10 bg-yellow-400 rounded-lg flex items-center justify-center text-black hover:bg-yellow-300 transition-all">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <a href="https://x.com/WebApp_agency" class="w-10 h-10 bg-yellow-400 rounded-lg flex items-center justify-center text-black hover:bg-yellow-300 transition-all">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        <a href="https://www.linkedin.com/company/109872940" class="w-10 h-10 bg-yellow-400 rounded-lg flex items-center justify-center text-black hover:bg-yellow-300 transition-all">
+                            <i class="fab fa-linkedin-in"></i>
+                        </a>
+                        <a href="https://www.facebook.com/profile.php?id=61586080677064" class="w-10 h-10 bg-yellow-400 rounded-lg flex items-center justify-center text-black hover:bg-yellow-300 transition-all">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="border-t border-yellow-400/30 pt-8 text-center text-yellow-400/70">
+                <p>&copy; 2025 Web App Digital Solutions. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Custom Cursor
+        const cursor = document.getElementById('cursor');
+        const darkSections = document.querySelectorAll('.bg-black, footer');
+        
+        document.addEventListener('mousemove', (e) => {
+            cursor.style.left = e.clientX + 'px';
+            cursor.style.top = e.clientY + 'px';
+            
+            let isOnDark = false;
+            darkSections.forEach(section => {
+                const rect = section.getBoundingClientRect();
+                if (e.clientX >= rect.left && e.clientX <= rect.right && 
+                    e.clientY >= rect.top && e.clientY <= rect.bottom) {
+                    isOnDark = true;
+                }
+            });
+            
+            if (isOnDark) {
+                cursor.classList.add('on-dark');
+            } else {
+                cursor.classList.remove('on-dark');
+            }
+        });
+
+        document.querySelectorAll('a, button').forEach(el => {
+            el.addEventListener('mouseenter', () => cursor.classList.add('hover'));
+            el.addEventListener('mouseleave', () => cursor.classList.remove('hover'));
+        });
+
+        // Navbar Scroll Effect
+        const navbar = document.querySelector('.navbar');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+
+        // Mobile Menu
+        const menuBtn = document.getElementById('menuBtn');
+        const closeMenu = document.getElementById('closeMenu');
+        const mobileMenu = document.getElementById('mobileMenu');
+
+        menuBtn.addEventListener('click', () => mobileMenu.classList.add('open'));
+        closeMenu.addEventListener('click', () => mobileMenu.classList.remove('open'));
+        
+        document.querySelectorAll('#mobileMenu a').forEach(link => {
+            link.addEventListener('click', () => mobileMenu.classList.remove('open'));
+        });
+
+        // FAQ Toggle
+        function toggleFaq(element) {
+            element.classList.toggle('active');
+        }
+
+        // Scroll Reveal Animation
+        const revealElements = document.querySelectorAll('.service-detail, .process-step, .faq-item');
+        const revealObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, { threshold: 0.1 });
+
+        revealElements.forEach(el => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(30px)';
+            el.style.transition = 'all 0.6s ease';
+            revealObserver.observe(el);
+        });
+
+        // WhatsApp Widget
+        const whatsappWidget = document.getElementById('whatsappWidget');
+        const closeWhatsapp = document.getElementById('closeWhatsapp');
+
+        if (!localStorage.getItem('whatsappHidden')) {
+            setTimeout(() => {
+                whatsappWidget.classList.remove('hidden');
+                whatsappWidget.classList.add('animate-bounce-in');
+            }, 2000);
+        }
+
+        closeWhatsapp.addEventListener('click', (e) => {
+            e.preventDefault();
+            whatsappWidget.style.opacity = '0';
+            whatsappWidget.style.transform = 'scale(0.5) translateY(20px)';
+            setTimeout(() => {
+                whatsappWidget.classList.add('hidden');
+            }, 300);
+            localStorage.setItem('whatsappHidden', 'true');
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,1044 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reviews | Web App Digital Solutions</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        * { scroll-behavior: smooth; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #FFD700;
+            overflow-x: hidden;
+        }
+        :root {
+            --yellow: #FFD700;
+            --yellow-light: #FFE44D;
+            --black: #0a0a0a;
+            --black-light: #1a1a1a;
+        }
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: var(--yellow); }
+        ::-webkit-scrollbar-thumb { background: var(--black); border-radius: 4px; }
+
+        .navbar {
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .navbar.scrolled {
+            background: rgba(255, 215, 0, 0.95);
+            backdrop-filter: blur(20px);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .cta-glow {
+            position: relative;
+            background: linear-gradient(135deg, var(--black) 0%, var(--black-light) 100%);
+            color: var(--yellow);
+            font-weight: 700;
+            padding: 18px 45px;
+            border-radius: 50px;
+            overflow: hidden;
+            transition: all 0.4s ease;
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.4);
+        }
+        .cta-glow:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 0 50px rgba(0, 0, 0, 0.6);
+        }
+        .cta-glow::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,215,0,0.3), transparent);
+            transition: 0.5s;
+        }
+        .cta-glow:hover::before { left: 100%; }
+
+        .nav-link { position: relative; }
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 3px;
+            background: var(--black);
+            transition: width 0.3s ease;
+        }
+        .nav-link:hover::after,
+        .nav-link.active::after { width: 100%; }
+
+        .mobile-menu {
+            transform: translateX(100%);
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .mobile-menu.open { transform: translateX(0); }
+
+        .gradient-text {
+            background: linear-gradient(135deg, var(--black) 0%, #333 50%, var(--black) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .yellow-pattern {
+            background-color: var(--yellow);
+            background-image: radial-gradient(circle at 20% 80%, rgba(0,0,0,0.05) 0%, transparent 50%),
+                              radial-gradient(circle at 80% 20%, rgba(0,0,0,0.05) 0%, transparent 50%);
+        }
+
+        .page-header {
+            background: linear-gradient(135deg, rgba(255,215,0,0.95) 0%, rgba(255,215,0,0.85) 100%), 
+                        url('https://images.unsplash.com/photo-1531973576160-7125cd663d86?w=1920') center/cover;
+            min-height: 50vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding-top: 150px;
+            padding-bottom: 40px;
+            margin-top: 0;
+        }
+
+        .review-card {
+            background: linear-gradient(145deg, #FFE44D 0%, #FFD700 100%);
+            border: 2px solid var(--black);
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .review-card:hover {
+            background: var(--black);
+            transform: translateY(-10px);
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.3);
+        }
+        .review-card:hover p,
+        .review-card:hover h4,
+        .review-card:hover span { color: var(--yellow); }
+        .review-card:hover .star-rating i { color: var(--yellow); }
+
+        .featured-review {
+            background: var(--black);
+        }
+        .featured-review * { color: var(--yellow) !important; }
+
+        .video-review {
+            background: linear-gradient(145deg, #FFE44D 0%, #FFD700 100%);
+            border: 2px solid var(--black);
+            transition: all 0.4s ease;
+        }
+        .video-review:hover {
+            transform: scale(1.02);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+        .play-btn {
+            background: var(--black);
+            color: var(--yellow);
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+        .play-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .rating-bar {
+            height: 12px;
+            background: rgba(0, 0, 0, 0.1);
+            border-radius: 6px;
+            overflow: hidden;
+        }
+        .rating-fill {
+            height: 100%;
+            background: var(--black);
+            border-radius: 6px;
+            transition: width 1s ease;
+        }
+
+        .client-logo {
+            filter: grayscale(100%);
+            opacity: 0.6;
+            transition: all 0.3s ease;
+        }
+        .client-logo:hover {
+            filter: grayscale(0%);
+            opacity: 1;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+        .float-animation { animation: float 6s ease-in-out infinite; }
+
+        /* Cursor Follower */
+        .cursor-follower {
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--black);
+            border-radius: 50%;
+            position: fixed;
+            pointer-events: none;
+            z-index: 9998;
+            transition: transform 0.15s ease, width 0.3s ease, height 0.3s ease, border-color 0.3s ease, background 0.3s ease;
+            transform: translate(-50%, -50%);
+        }
+        .cursor-follower.hover {
+            width: 50px;
+            height: 50px;
+            background: rgba(0, 0, 0, 0.1);
+        }
+        .cursor-follower.on-dark {
+            border-color: var(--yellow);
+        }
+        .cursor-follower.on-dark.hover {
+            background: rgba(255, 215, 0, 0.2);
+        }
+
+        .stat-highlight {
+            background: var(--black);
+            transition: all 0.4s ease;
+        }
+        .stat-highlight:hover {
+            transform: scale(1.05);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+        }
+
+        /* WhatsApp Button Styles */
+        .whatsapp-btn {
+            animation: pulse-whatsapp 2s ease-in-out infinite;
+        }
+        @keyframes pulse-whatsapp {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.5); }
+            50% { box-shadow: 0 0 0 15px rgba(37, 211, 102, 0); }
+        }
+        .animate-bounce-in {
+            animation: bounce-in 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+        @keyframes bounce-in {
+            0% { opacity: 0; transform: scale(0.5) translateY(20px); }
+            100% { opacity: 1; transform: scale(1) translateY(0); }
+        }
+        #whatsappWidget {
+            transition: all 0.3s ease;
+        }
+    </style>
+</head>
+<body class="text-black">
+    <!-- Custom Cursor -->
+    <div class="cursor-follower hidden md:block" id="cursor"></div>
+
+    <!-- Navbar -->
+    <nav class="navbar fixed w-full top-0 z-50 py-4 px-6 md:px-12 bg-yellow-400/90 backdrop-blur-sm">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <a href="index.html" class="flex items-center space-x-3 group">
+                <div class="w-18 h-18  flex items-center justify-center transform group-hover:rotate-12 transition-transform duration-300">
+                    <img class="brand-logo" src="./images/logo.png" alt="Brand" />
+                </div>
+                <div>
+                    <h1 class="font-bold text-lg leading-tight text-black">Web App</h1>
+                    <p class="text-black/70 text-xs font-medium">Digital Solutions</p>
+                </div>
+            </a>
+
+            <div class="hidden lg:flex items-center space-x-10">
+                <a href="index.html" class="nav-link text-black hover:text-black/70 transition-colors font-semibold">Home</a>
+                <a href="about.html" class="nav-link text-black hover:text-black/70 transition-colors font-semibold">About Us</a>
+                <a href="services.html" class="nav-link text-black hover:text-black/70 transition-colors font-semibold">Services</a>
+                <a href="reviews.html" class="nav-link active text-black hover:text-black/70 transition-colors font-semibold">Reviews</a>
+                <a href="careers.html" class="nav-link text-black hover:text-black/70 transition-colors font-semibold">Careers</a>
+                <a href="contact.html" class="nav-link text-black hover:text-black/70 transition-colors font-semibold">Contact</a>
+            </div>
+
+            <a href="contact.html" class="hidden lg:block cta-glow text-sm">
+                Let's Talk <i class="fas fa-arrow-right ml-2"></i>
+            </a>
+
+            <button class="lg:hidden text-black text-2xl" id="menuBtn">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Mobile Menu -->
+    <div class="mobile-menu fixed top-0 right-0 w-80 h-full bg-yellow-400 z-50 p-8 border-l-4 border-black" id="mobileMenu">
+        <button class="absolute top-6 right-6 text-2xl text-black" id="closeMenu">
+            <i class="fas fa-times"></i>
+        </button>
+        <div class="mt-16 space-y-6">
+            <a href="index.html" class="block text-xl text-black hover:text-black/70 transition-colors font-semibold">Home</a>
+            <a href="about.html" class="block text-xl text-black hover:text-black/70 transition-colors font-semibold">About Us</a>
+            <a href="services.html" class="block text-xl text-black hover:text-black/70 transition-colors font-semibold">Services</a>
+            <a href="reviews.html" class="block text-xl text-black hover:text-black/70 transition-colors font-semibold">Reviews</a>
+            <a href="careers.html" class="block text-xl text-black hover:text-black/70 transition-colors font-semibold">Careers</a>
+            <a href="contact.html" class="block text-xl text-black hover:text-black/70 transition-colors font-semibold">Contact</a>
+            <a href="contact.html" class="inline-block cta-glow mt-6">Let's Talk</a>
+        </div>
+    </div>
+
+    <!-- Page Header -->
+    <section class="page-header pt-20">
+        <div class="text-center">
+            <span class="inline-block px-4 py-2 bg-black text-yellow-400 rounded-full text-sm font-semibold mb-6">Client Success Stories</span>
+            <h1 class="text-5xl md:text-7xl font-black text-black mb-6">Reviews</h1>
+            <p class="text-xl text-black/70 max-w-2xl mx-auto px-6">See what our clients say about working with us</p>
+        </div>
+    </section>
+
+    <!-- Rating Overview -->
+    <section class="py-16 bg-black">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="grid md:grid-cols-4 gap-8 text-center">
+                <div class="stat-highlight p-8 rounded-2xl">
+                    <div class="text-5xl font-black text-yellow-400 mb-2">4.9</div>
+                    <div class="flex justify-center text-yellow-400 mb-2">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <p class="text-yellow-400/70 font-semibold">Average Rating</p>
+                </div>
+                <div class="stat-highlight p-8 rounded-2xl">
+                    <div class="text-5xl font-black text-yellow-400 mb-2">150+</div>
+                    <p class="text-yellow-400/70 font-semibold">Happy Clients</p>
+                </div>
+                <div class="stat-highlight p-8 rounded-2xl">
+                    <div class="text-5xl font-black text-yellow-400 mb-2">98%</div>
+                    <p class="text-yellow-400/70 font-semibold">Client Satisfaction</p>
+                </div>
+                <div class="stat-highlight p-8 rounded-2xl">
+                    <div class="text-5xl font-black text-yellow-400 mb-2">85%</div>
+                    <p class="text-yellow-400/70 font-semibold">Repeat Clients</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Featured Review -->
+    <section class="py-24 yellow-pattern">
+        <div class="max-w-5xl mx-auto px-6">
+            <div class="featured-review p-10 md:p-16 rounded-3xl relative overflow-hidden">
+                <div class="absolute top-10 right-10 text-9xl opacity-20">
+                    <i class="fas fa-quote-right"></i>
+                </div>
+                <div class="relative z-10">
+                    <div class="flex text-yellow-400 text-2xl mb-6">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <p class="text-2xl md:text-3xl font-medium leading-relaxed mb-8">
+                        "Working with Web App Digital Solutions was a game-changer for our business. They didn't just build us a website – they created a complete digital ecosystem that transformed how we connect with customers. Our online revenue increased by 300% within the first six months!"
+                    </p>
+                    <div class="flex items-center">
+                        <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Client" class="w-16 h-16 rounded-full mr-4 border-4 border-yellow-400">
+                        <div>
+                            <h4 class="font-bold text-xl">Michael Johnson</h4>
+                            <p class="text-yellow-400/70">CEO, TechStart Inc.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Rating Breakdown -->
+    <section class="py-16 bg-gradient-to-b from-yellow-400 to-yellow-500">
+        <div class="max-w-4xl mx-auto px-6">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl md:text-4xl font-black text-black">Rating Breakdown</h2>
+            </div>
+            <div class="space-y-4">
+                <div class="flex items-center space-x-4">
+                    <span class="w-24 text-black font-semibold">5 Stars</span>
+                    <div class="flex-1 rating-bar">
+                        <div class="rating-fill" style="width: 92%"></div>
+                    </div>
+                    <span class="w-16 text-black font-bold text-right">92%</span>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <span class="w-24 text-black font-semibold">4 Stars</span>
+                    <div class="flex-1 rating-bar">
+                        <div class="rating-fill" style="width: 6%"></div>
+                    </div>
+                    <span class="w-16 text-black font-bold text-right">6%</span>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <span class="w-24 text-black font-semibold">3 Stars</span>
+                    <div class="flex-1 rating-bar">
+                        <div class="rating-fill" style="width: 2%"></div>
+                    </div>
+                    <span class="w-16 text-black font-bold text-right">2%</span>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <span class="w-24 text-black font-semibold">2 Stars</span>
+                    <div class="flex-1 rating-bar">
+                        <div class="rating-fill" style="width: 0%"></div>
+                    </div>
+                    <span class="w-16 text-black font-bold text-right">0%</span>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <span class="w-24 text-black font-semibold">1 Star</span>
+                    <div class="flex-1 rating-bar">
+                        <div class="rating-fill" style="width: 0%"></div>
+                    </div>
+                    <span class="w-16 text-black font-bold text-right">0%</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- All Reviews -->
+    <section class="py-24 yellow-pattern">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="text-center mb-16">
+                <span class="inline-block text-black font-bold uppercase tracking-wider bg-black/10 px-4 py-2 rounded-full mb-6">Verified Reviews</span>
+                <h2 class="text-4xl md:text-5xl font-black text-black">Our Upwork Success</h2>
+                <p class="text-black/70 text-lg mt-4 max-w-2xl mx-auto">Authentic reviews from our Upwork clients - 100% verified and transparent</p>
+            </div>
+            <!-- Upwork Stats -->
+            <div class="grid md:grid-cols-4 gap-6 mb-12">
+                <div class="bg-white/50 border-2 border-black rounded-2xl p-6 text-center hover:bg-black hover:text-yellow-400 transition-all group">
+                    <div class="w-14 h-14 bg-black rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-yellow-400">
+                        <i class="fab fa-upwork text-yellow-400 text-2xl group-hover:text-black"></i>
+                    </div>
+                    <div class="text-3xl font-black text-black group-hover:text-yellow-400">Top Rated</div>
+                    <p class="text-black/70 group-hover:text-yellow-400/70">Upwork Status</p>
+                </div>
+                <div class="bg-white/50 border-2 border-black rounded-2xl p-6 text-center hover:bg-black hover:text-yellow-400 transition-all group">
+                    <div class="w-14 h-14 bg-black rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-yellow-400">
+                        <i class="fas fa-briefcase text-yellow-400 text-2xl group-hover:text-black"></i>
+                    </div>
+                    <div class="text-3xl font-black text-black group-hover:text-yellow-400">100+</div>
+                    <p class="text-black/70 group-hover:text-yellow-400/70">Jobs Completed</p>
+                </div>
+                <div class="bg-white/50 border-2 border-black rounded-2xl p-6 text-center hover:bg-black hover:text-yellow-400 transition-all group">
+                    <div class="w-14 h-14 bg-black rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-yellow-400">
+                        <i class="fas fa-dollar-sign text-yellow-400 text-2xl group-hover:text-black"></i>
+                    </div>
+                    <div class="text-3xl font-black text-black group-hover:text-yellow-400">$40k+</div>
+                    <p class="text-black/70 group-hover:text-yellow-400/70">Total Earnings</p>
+                </div>
+                <div class="bg-white/50 border-2 border-black rounded-2xl p-6 text-center hover:bg-black hover:text-yellow-400 transition-all group">
+                    <div class="w-14 h-14 bg-black rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-yellow-400">
+                        <i class="fas fa-redo text-yellow-400 text-2xl group-hover:text-black"></i>
+                    </div>
+                    <div class="text-3xl font-black text-black group-hover:text-yellow-400">80%</div>
+                    <p class="text-black/70 group-hover:text-yellow-400/70">Rehire Rate</p>
+                </div>
+            </div>
+            <!-- Upwork Review Cards -->
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
+                <!-- Upwork Review 1 -->
+                <div class="bg-white rounded-2xl border-2 border-black p-6 hover:shadow-2xl transition-all hover:-translate-y-2">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="flex items-center gap-2">
+                            <i class="fab fa-upwork text-5xl text-green-400 " ></i>
+                            <span class="text-sm font-bold text-green-600">Verified on Upwork</span>
+                        </div>
+                        <div class="flex text-yellow-500">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                        </div>
+                    </div>
+                    <p class="text-black/80 mb-4 italic">"Very Professional, Resolved the issues within time period. Highly Recommend"</p>
+                    <div class="border-t border-black/10 pt-4">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <h4 class="font-bold text-black">Pose tracking website</h4>
+                                <p class="text-black/60 text-sm">Fixed Price - $850</p>
+                            </div>
+                            <span class="bg-green-100 text-green-700 text-xs font-bold px-3 py-1 rounded-full">Completed</span>
+                        </div>
+                    </div>
+                </div>
+                <!-- Upwork Review 2 -->
+                <div class="bg-white rounded-2xl border-2 border-black p-6 hover:shadow-2xl transition-all hover:-translate-y-2">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="flex items-center gap-2">
+                            <i class="fab fa-upwork text-5xl text-green-400 " ></i>
+                            <span class="text-sm font-bold text-green-600">Verified on Upwork</span>
+                        </div>
+                        <div class="flex text-yellow-500">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                        </div>
+                    </div>
+                    <p class="text-black/80 mb-4 italic">"Really impressive and high quality developemnt from Sagar, definitely recommend him to anyone looking for android app development."                                                     </p>
+                    <div class="border-t border-black/10 pt-4">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <h4 class="font-bold text-black">Website Development</h4>
+                                <p class="text-black/60 text-sm">Fixed Price - $150</p>
+                            </div>
+                            <span class="bg-green-100 text-green-700 text-xs font-bold px-3 py-1 rounded-full">Completed</span>
+                        </div>
+                    </div>
+                </div>
+                <!-- Upwork Review 3 -->
+                <div class="bg-white rounded-2xl border-2 border-black p-6 hover:shadow-2xl transition-all hover:-translate-y-2">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="flex items-center gap-2">
+                            <i class="fab fa-upwork text-5xl text-green-400 " ></i>
+                            <span class="text-sm font-bold text-green-600">Verified on Upwork</span>
+                        </div>
+                        <div class="flex text-yellow-500">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                        </div>
+                    </div>
+                    <p class="text-black/80 mb-4 italic">"Working with Sagar has been an outstanding experience. He took on a complex and unique project—building a Jiu-Jitsu pose tracking and training feedback app—and delivered results beyond expectations...</p>
+                    <div class="border-t border-black/10 pt-4">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <h4 class="font-bold text-black">Website application</h4>
+                                <p class="text-black/60 text-sm">Hourly - $300</p>
+                            </div>
+                            <span class="bg-green-100 text-green-700 text-xs font-bold px-3 py-1 rounded-full">Completed</span>
+                        </div>
+                    </div>
+                </div>
+                <!-- Upwork Review 4 -->
+                <div class="bg-white rounded-2xl border-2 border-black p-6 hover:shadow-2xl transition-all hover:-translate-y-2">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="flex items-center gap-2">
+                            <i class="fab fa-upwork text-5xl text-green-400 " ></i>
+                            <span class="text-sm font-bold text-green-600">Verified on Upwork</span>
+                        </div>
+                        <div class="flex text-yellow-500">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                        </div>
+                    </div>
+                    <p class="text-black/80 mb-4 italic">"Hard worker. Very committed. His communication was top-notch, he met all deadlines, and his skills were reasonably strong."</p>
+                    <div class="border-t border-black/10 pt-4">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <h4 class="font-bold text-black">Android mobile application</h4>
+                                <p class="text-black/60 text-sm">Fixed Price - $250</p>
+                            </div>
+                            <span class="bg-green-100 text-green-700 text-xs font-bold px-3 py-1 rounded-full">Completed</span>
+                        </div>
+                    </div>
+                </div>
+                <!-- Upwork Review 5 -->
+                <div class="bg-white rounded-2xl border-2 border-black p-6 hover:shadow-2xl transition-all hover:-translate-y-2">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="flex items-center gap-2">
+                            <i class="fab fa-upwork text-5xl text-green-400 " ></i>
+                            <span class="text-sm font-bold text-green-600">Verified on Upwork</span>
+                        </div>
+                        <div class="flex text-yellow-500">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                        </div>
+                    </div>
+                    <p class="text-black/80 mb-4 italic">"Third project with this team and they never disappoint. Built a complex inventory management system that saved us countless hours."</p>
+                    <div class="border-t border-black/10 pt-4">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <h4 class="font-bold text-black">Inventory System</h4>
+                                <p class="text-black/60 text-sm">Fixed Price - $800</p>
+                            </div>
+                            <span class="bg-green-100 text-green-700 text-xs font-bold px-3 py-1 rounded-full">Completed</span>
+                        </div>
+                    </div>
+                </div>
+                <!-- Upwork Review 6 -->
+                <div class="bg-white rounded-2xl border-2 border-black p-6 hover:shadow-2xl transition-all hover:-translate-y-2">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="flex items-center gap-2">
+                            <i class="fab fa-upwork text-5xl text-green-400 " ></i>
+                            <span class="text-sm font-bold text-green-600">Verified on Upwork</span>
+                        </div>
+                        <div class="flex text-yellow-500">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                        </div>
+                    </div>
+                    <p class="text-black/80 mb-4 italic">"Excellent API development work. They integrated multiple third-party services flawlessly. Clean code and great documentation provided."</p>
+                    <div class="border-t border-black/10 pt-4">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <h4 class="font-bold text-black">API Integration</h4>
+                                <p class="text-black/60 text-sm">Fixed Price - $500</p>
+                            </div>
+                            <span class="bg-green-100 text-green-700 text-xs font-bold px-3 py-1 rounded-full">Completed</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- View Upwork Profile Button -->
+            <div class="text-center">
+                <a href="https://www.upwork.com/freelancers/sagarnityanandm" target="_blank" class="inline-flex items-center px-8 py-4 bg-green-500 text-white rounded-full font-bold hover:bg-green-600 transition-all transform hover:scale-105 shadow-xl">
+                    <i class="fab fa-upwork text-2xl mr-3"></i>
+                    View Our Upwork Profile
+                    <i class="fas fa-external-link-alt ml-3"></i>
+                </a>
+            </div>
+        </div>
+    </section>
+    <!-- All Reviews -->
+    <section class="py-24 bg-gradient-to-b from-yellow-400 to-yellow-500">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="text-center mb-16">
+                <span class="inline-block text-black font-bold uppercase tracking-wider bg-black/10 px-4 py-2 rounded-full mb-6">Testimonials</span>
+                <h2 class="text-4xl md:text-5xl font-black text-black">What Our Clients Say</h2>
+            </div>
+
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Review 1 -->
+                <div class="review-card p-8 rounded-2xl">
+                    <div class="star-rating flex text-black mb-4">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <p class="text-black/80 mb-6 italic">"Web App Digital Solutions transformed our outdated website into a stunning, high-performing platform. Our conversions increased by 200% within the first month!"</p>
+                    <div class="flex items-center">
+                        <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Client" class="w-12 h-12 rounded-full mr-4 border-2 border-black">
+                        <div>
+                            <h4 class="font-bold text-black">Michael Johnson</h4>
+                            <span class="text-black/60 text-sm">CEO, TechStart Inc.</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Review 2 -->
+                <div class="review-card p-8 rounded-2xl">
+                    <div class="star-rating flex text-black mb-4">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <p class="text-black/80 mb-6 italic">"The mobile app they developed for us exceeded all expectations. Professional team, excellent communication, and delivered on time. Highly recommended!"</p>
+                    <div class="flex items-center">
+                        <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="Client" class="w-12 h-12 rounded-full mr-4 border-2 border-black">
+                        <div>
+                            <h4 class="font-bold text-black">Sarah Williams</h4>
+                            <span class="text-black/60 text-sm">Founder, HealthPlus</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Review 3 -->
+                <div class="review-card p-8 rounded-2xl">
+                    <div class="star-rating flex text-black mb-4">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <p class="text-black/80 mb-6 italic">"Their cloud solutions helped us scale effortlessly. The team's expertise and dedication to our success made all the difference. A true technology partner!"</p>
+                    <div class="flex items-center">
+                        <img src="https://randomuser.me/api/portraits/men/67.jpg" alt="Client" class="w-12 h-12 rounded-full mr-4 border-2 border-black">
+                        <div>
+                            <h4 class="font-bold text-black">David Chen</h4>
+                            <span class="text-black/60 text-sm">CTO, CloudNine Systems</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Review 4 -->
+                <div class="review-card p-8 rounded-2xl">
+                    <div class="star-rating flex text-black mb-4">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <p class="text-black/80 mb-6 italic">"From concept to launch, the team was incredible. They understood our vision and delivered a product that perfectly represents our brand. Outstanding work!"</p>
+                    <div class="flex items-center">
+                        <img src="https://randomuser.me/api/portraits/women/28.jpg" alt="Client" class="w-12 h-12 rounded-full mr-4 border-2 border-black">
+                        <div>
+                            <h4 class="font-bold text-black">Emily Rodriguez</h4>
+                            <span class="text-black/60 text-sm">Marketing Director, Luxe Fashion</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Review 5 -->
+                <div class="review-card p-8 rounded-2xl">
+                    <div class="star-rating flex text-black mb-4">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <p class="text-black/80 mb-6 italic">"Best decision we made was partnering with Web App Digital Solutions. Their UX design completely transformed our customer experience. Simply brilliant!"</p>
+                    <div class="flex items-center">
+                        <img src="https://randomuser.me/api/portraits/men/52.jpg" alt="Client" class="w-12 h-12 rounded-full mr-4 border-2 border-black">
+                        <div>
+                            <h4 class="font-bold text-black">Robert Thompson</h4>
+                            <span class="text-black/60 text-sm">Owner, Global Retail Co.</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Review 6 -->
+                <div class="review-card p-8 rounded-2xl">
+                    <div class="star-rating flex text-black mb-4">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <p class="text-black/80 mb-6 italic">"Their attention to detail is unmatched. Every feature was thoughtfully implemented. The ongoing support and maintenance have been exceptional too!"</p>
+                    <div class="flex items-center">
+                        <img src="https://randomuser.me/api/portraits/women/65.jpg" alt="Client" class="w-12 h-12 rounded-full mr-4 border-2 border-black">
+                        <div>
+                            <h4 class="font-bold text-black">Jennifer Lee</h4>
+                            <span class="text-black/60 text-sm">VP Product, FinTech Pro</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Review 7 -->
+                <div class="review-card p-8 rounded-2xl">
+                    <div class="star-rating flex text-black mb-4">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <p class="text-black/80 mb-6 italic">"We needed a complex e-commerce solution and they delivered beyond our expectations. The platform handles thousands of orders daily without any issues!"</p>
+                    <div class="flex items-center">
+                        <img src="https://randomuser.me/api/portraits/men/45.jpg" alt="Client" class="w-12 h-12 rounded-full mr-4 border-2 border-black">
+                        <div>
+                            <h4 class="font-bold text-black">James Wilson</h4>
+                            <span class="text-black/60 text-sm">CEO, MegaStore Online</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Review 8 -->
+                <div class="review-card p-8 rounded-2xl">
+                    <div class="star-rating flex text-black mb-4">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <p class="text-black/80 mb-6 italic">"The SEO and digital marketing strategy they implemented doubled our organic traffic in just 3 months. ROI has been phenomenal!"</p>
+                    <div class="flex items-center">
+                        <img src="https://randomuser.me/api/portraits/women/33.jpg" alt="Client" class="w-12 h-12 rounded-full mr-4 border-2 border-black">
+                        <div>
+                            <h4 class="font-bold text-black">Amanda Foster</h4>
+                            <span class="text-black/60 text-sm">CMO, GrowthFirst Agency</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Review 9 -->
+                <div class="review-card p-8 rounded-2xl">
+                    <div class="star-rating flex text-black mb-4">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star-half-alt"></i>
+                    </div>
+                    <p class="text-black/80 mb-6 italic">"Great communication throughout the project. They kept us updated at every stage and were always open to feedback. Will definitely work with them again!"</p>
+                    <div class="flex items-center">
+                        <img src="https://randomuser.me/api/portraits/men/22.jpg" alt="Client" class="w-12 h-12 rounded-full mr-4 border-2 border-black">
+                        <div>
+                            <h4 class="font-bold text-black">Kevin Martinez</h4>
+                            <span class="text-black/60 text-sm">Founder, StartupHub</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Trusted By Section -->
+    <section class="py-16 bg-black overflow-hidden">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="text-center mb-12">
+                <span class="text-yellow-400 font-bold uppercase tracking-wider">Trusted By Industry Leaders</span>
+            </div>
+            
+            <!-- Client Logos Marquee -->
+            <div class="relative overflow-hidden">
+                <div class="flex animate-marquee space-x-12 items-center">
+                    <!-- First set of logos -->
+                    <div class="flex-shrink-0 bg-black rounded-xl p-6 hover:bg-black transition-all duration-300">
+                        <img src="https://res.cloudinary.com/dunnl6xcd/image/upload/v1767884615/IMG-20260105-WA0002_mi801c.jpg" alt="Client Logo" class="h-16 w-auto object-contain filter grayscale hover:grayscale-0 transition-all duration-300">
+                    </div>
+                    <div class="flex-shrink-0 bg-black rounded-xl p-6 hover:bg-black transition-all duration-300">
+                        <img src="https://res.cloudinary.com/dunnl6xcd/image/upload/v1767884616/Screenshot_2026-01-05_124616_yoqoqs.png" alt="Client Logo" class="h-16 w-auto object-contain filter grayscale hover:grayscale-0 transition-all duration-300">
+                    </div>
+                    <div class="flex-shrink-0 bg-black rounded-xl p-6 hover:bg-black transition-all duration-300">
+                        <img src="https://res.cloudinary.com/dunnl6xcd/image/upload/v1767884612/images_28_fexcqc.jpg" alt="Client Logo" class="h-16 w-auto object-contain filter grayscale hover:grayscale-0 transition-all duration-300">
+                    </div>
+                    <div class="flex-shrink-0 bg-black rounded-xl p-6 hover:bg-black transition-all duration-300">
+                        <img src="https://res.cloudinary.com/dunnl6xcd/image/upload/v1767884612/images_3_ku0bte.png" alt="Client Logo" class="h-16 w-auto object-contain filter grayscale hover:grayscale-0 transition-all duration-300">
+                    </div>
+                    <div class="flex-shrink-0 bg-black rounded-xl p-6 hover:bg-black transition-all duration-300">
+                        <img src="https://res.cloudinary.com/dunnl6xcd/image/upload/v1767884612/findo_technologies_logo_de8yxf.jpg" alt="Findo Technologies" class="h-16 w-auto object-contain filter grayscale hover:grayscale-0 transition-all duration-300">
+                    </div>
+                    <div class="flex-shrink-0 bg-black rounded-xl p-6 hover:bg-black transition-all duration-300">
+                        <img src="https://res.cloudinary.com/dunnl6xcd/image/upload/v1767884612/idfy_logo_upkwkk.jpg" alt="IDfy" class="h-16 w-auto object-contain filter grayscale hover:grayscale-0 transition-all duration-300">
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Leave Review CTA -->
+    <section class="py-24 yellow-pattern">
+        <div class="max-w-4xl mx-auto px-6 text-center">
+            <h2 class="text-4xl md:text-5xl font-black text-black mb-6">Share Your Experience</h2>
+            <p class="text-black/70 text-xl mb-10">We'd love to hear about your experience working with us. Your feedback helps us improve and helps others make informed decisions.</p>
+            <a href="contact.html" class="cta-glow inline-block text-lg">
+                Write a Review <i class="fas fa-pen ml-2"></i>
+            </a>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="py-24 bg-black relative overflow-hidden">
+        <div class="absolute inset-0 opacity-10">
+            <div class="absolute top-10 left-10 w-64 h-64 bg-yellow-400 rounded-full"></div>
+            <div class="absolute bottom-10 right-10 w-96 h-96 bg-yellow-400 rounded-full"></div>
+        </div>
+        <div class="max-w-4xl mx-auto px-6 text-center relative z-10">
+            <h2 class="text-4xl md:text-6xl font-black text-yellow-400 mb-6">Ready to Join Our Success Stories?</h2>
+            <p class="text-yellow-400/70 text-xl mb-10 max-w-2xl mx-auto">Let us help you achieve extraordinary results like our satisfied clients.</p>
+            <a href="contact.html" class="inline-block px-12 py-5 bg-yellow-400 text-black text-lg font-bold rounded-full hover:bg-yellow-300 transform hover:scale-105 transition-all duration-300 shadow-2xl">
+                Let's Talk Now <i class="fas fa-arrow-right ml-2"></i>
+            </a>
+        </div>
+    </section>
+
+    <!-- WhatsApp Floating Button -->
+    <div id="whatsappWidget" class="fixed bottom-6 right-6 z-50 hidden">
+        <div class="relative group">
+            <button id="closeWhatsapp" class="absolute -top-2 -left-2 w-6 h-6 bg-black text-yellow-400 rounded-full flex items-center justify-center text-xs font-bold shadow-lg hover:bg-gray-800 transition-all duration-300 z-10 opacity-0 group-hover:opacity-100">
+                <i class="fas fa-times"></i>
+            </button>
+            <a href="https://wa.me/+918169312050?text=Hi! I'm interested in your services." target="_blank" class="whatsapp-btn flex items-center justify-center w-16 h-16 bg-green-500 rounded-full shadow-2xl hover:bg-green-600 transition-all duration-300 hover:scale-110">
+                <i class="fab fa-whatsapp text-white text-3xl"></i>
+            </a>
+            <div class="absolute right-20 top-1/2 -translate-y-1/2 bg-black text-yellow-400 px-4 py-2 rounded-lg text-sm font-semibold whitespace-nowrap opacity-0 group-hover:opacity-100 transition-all duration-300 pointer-events-none shadow-lg">
+                Chat with us on WhatsApp
+                <div class="absolute right-0 top-1/2 -translate-y-1/2 translate-x-full border-8 border-transparent border-l-black"></div>
+            </div>
+        </div>
+        <div class="absolute inset-0 w-16 h-16 bg-green-500 rounded-full animate-ping opacity-30 pointer-events-none"></div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="py-12 bg-black border-t-4 border-yellow-400">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="grid md:grid-cols-4 gap-10 mb-10">
+                <div>
+                    <div class="flex items-center space-x-3 mb-6">
+                        <div class="w-30 h-30 bg-yellow-400 rounded-lg flex items-center justify-center">
+                            <img class="brand-logo" src="./images/logo_yellow.svg" alt="Brand" />
+                        </div>
+                        <div>
+                            <h1 class="font-bold text-lg leading-tight text-yellow-400">Web App</h1>
+                            <p class="text-yellow-400/70 text-xs font-medium">Digital Solutions</p>
+                        </div>
+                    </div>
+                    <p class="text-yellow-400/70">Transforming ideas into powerful digital solutions since 2022.</p>
+                </div>
+                <div>
+                    <h4 class="font-bold text-lg mb-6 text-yellow-400">Quick Links</h4>
+                    <ul class="space-y-3 text-yellow-400/70">
+                        <li><a href="index.html" class="hover:text-yellow-400 transition-colors">Home</a></li>
+                        <li><a href="about.html" class="hover:text-yellow-400 transition-colors">About Us</a></li>
+                        <li><a href="services.html" class="hover:text-yellow-400 transition-colors">Services</a></li>
+                        <li><a href="reviews.html" class="hover:text-yellow-400 transition-colors">Reviews</a></li>
+                        <li><a href="careers.html" class="hover:text-yellow-400 transition-colors">Careers</a></li>
+                        <li><a href="contact.html" class="hover:text-yellow-400 transition-colors">Contact</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-bold text-lg mb-6 text-yellow-400">Services</h4>
+                    <ul class="space-y-3 text-yellow-400/70">
+                        <li><a href="services.html#web" class="hover:text-yellow-400 transition-colors">Web Development</a></li>
+                        <li><a href="services.html#mobile" class="hover:text-yellow-400 transition-colors">Mobile Apps</a></li>
+                        <li><a href="services.html#software" class="hover:text-yellow-400 transition-colors">Software Solutions</a></li>
+                        <li><a href="services.html#design" class="hover:text-yellow-400 transition-colors">UI/UX Design</a></li>
+                        <li><a href="services.html#cloud" class="hover:text-yellow-400 transition-colors">Cloud Services</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-bold text-lg mb-6 text-yellow-400">Contact Info</h4>
+                    <div class="space-y-3 text-yellow-400/70">
+                        <div class="flex items-center hover:text-yellow-400 transition-colors">
+                            <i class="fas fa-map-marker-alt mr-2 flex-shrink-0"></i>
+                            <span>Thakur Complex, Kandivali (East), Mumbai, Maharashtra 400101, India</span>
+                        </div>
+                        <div class="flex items-center">
+                            <a href="mailto:hello@webappdigitalsolutions.com" class="flex items-center hover:text-yellow-400 transition-colors">
+                                <i class="fas fa-envelope mr-2 flex-shrink-0"></i>
+                                <span>hello@webappdigitalsolutions.com</span>
+                            </a>
+                        </div>
+                        <div class="flex items-center">
+                            <a href="tel:+918169312050" class="flex items-center hover:text-yellow-400 transition-colors">
+                                <i class="fas fa-phone mr-2 flex-shrink-0"></i>
+                                <span>+91 81693 12050</span>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="flex space-x-4 mt-6">
+                        <a href="https://www.facebook.com/profile.php?id=61586080677064" class="w-10 h-10 bg-yellow-400 rounded-lg flex items-center justify-center text-black hover:bg-yellow-300 transition-all">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <a href="https://x.com/WebApp_agency" class="w-10 h-10 bg-yellow-400 rounded-lg flex items-center justify-center text-black hover:bg-yellow-300 transition-all">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        <a href="https://www.linkedin.com/company/109872940" class="w-10 h-10 bg-yellow-400 rounded-lg flex items-center justify-center text-black hover:bg-yellow-300 transition-all">
+                            <i class="fab fa-linkedin-in"></i>
+                        </a>
+                        <a href="https://www.facebook.com/profile.php?id=61586080677064" class="w-10 h-10 bg-yellow-400 rounded-lg flex items-center justify-center text-black hover:bg-yellow-300 transition-all">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="border-t border-yellow-400/30 pt-8 text-center text-yellow-400/70">
+                <p>&copy; 2025 Web App Digital Solutions. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Custom Cursor
+        const cursor = document.getElementById('cursor');
+        const darkSections = document.querySelectorAll('.bg-black, footer, .stat-highlight, .featured-review');
+        
+        document.addEventListener('mousemove', (e) => {
+            cursor.style.left = e.clientX + 'px';
+            cursor.style.top = e.clientY + 'px';
+            
+            let isOnDark = false;
+            darkSections.forEach(section => {
+                const rect = section.getBoundingClientRect();
+                if (e.clientX >= rect.left && e.clientX <= rect.right && 
+                    e.clientY >= rect.top && e.clientY <= rect.bottom) {
+                    isOnDark = true;
+                }
+            });
+            
+            if (isOnDark) {
+                cursor.classList.add('on-dark');
+            } else {
+                cursor.classList.remove('on-dark');
+            }
+        });
+
+        document.querySelectorAll('a, button').forEach(el => {
+            el.addEventListener('mouseenter', () => cursor.classList.add('hover'));
+            el.addEventListener('mouseleave', () => cursor.classList.remove('hover'));
+        });
+
+        // Navbar Scroll Effect
+        const navbar = document.querySelector('.navbar');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+
+        // Mobile Menu
+        const menuBtn = document.getElementById('menuBtn');
+        const closeMenu = document.getElementById('closeMenu');
+        const mobileMenu = document.getElementById('mobileMenu');
+
+        menuBtn.addEventListener('click', () => mobileMenu.classList.add('open'));
+        closeMenu.addEventListener('click', () => mobileMenu.classList.remove('open'));
+        
+        document.querySelectorAll('#mobileMenu a').forEach(link => {
+            link.addEventListener('click', () => mobileMenu.classList.remove('open'));
+        });
+
+        // Scroll Reveal Animation
+        const revealElements = document.querySelectorAll('.review-card, .stat-highlight');
+        const revealObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, { threshold: 0.1 });
+
+        revealElements.forEach(el => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(30px)';
+            el.style.transition = 'all 0.6s ease';
+            revealObserver.observe(el);
+        });
+
+        // WhatsApp Widget
+        const whatsappWidget = document.getElementById('whatsappWidget');
+        const closeWhatsapp = document.getElementById('closeWhatsapp');
+
+        if (!localStorage.getItem('whatsappHidden')) {
+            setTimeout(() => {
+                whatsappWidget.classList.remove('hidden');
+                whatsappWidget.classList.add('animate-bounce-in');
+            }, 2000);
+        }
+
+        closeWhatsapp.addEventListener('click', (e) => {
+            e.preventDefault();
+            whatsappWidget.style.opacity = '0';
+            whatsappWidget.style.transform = 'scale(0.5) translateY(20px)';
+            setTimeout(() => {
+                whatsappWidget.classList.add('hidden');
+            }, 300);
+            localStorage.setItem('whatsappHidden', 'true');
+        });
+    </script>
+</body>
+</html>
